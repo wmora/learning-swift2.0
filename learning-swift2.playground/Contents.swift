@@ -281,4 +281,82 @@ let mappedNumbers = numbers.map({number in 3 * number})
 print(mappedNumbers)
 
 // You can refer to parameters by number instead of by name - this approach is especially useful in very short closures.
-// A closure passed as the last argument to a function can appear
+// A closure passed as the last argument to a function can appear immediately after the parentheses. When a closure is the ony argument to a function, you can omit the parentheses entirely
+let sortedNumbers = numbers.sort { $0 > $1 }
+print(sortedNumbers)
+
+// Objects and classes
+// Use class followed by the class's name to create a class
+// A property declaration in a class is written the same way as a constant or variable declaration, except that it is in the context of a class. Likewise, method and function declarations are written in the same way
+class Shape {
+    var numberOfSides = 0
+    var name: String
+    
+    init(name: String) {
+        self.name = name
+    }
+    
+    func simpleDescription() -> String {
+        return "A shape with \(numberOfSides) sides"
+    }
+}
+
+// Experiment: Add a constant property with let, and add another method that takes an argument
+
+// Create an instance of a class by putting parentheses after the class name. Use dot syntax to access the properties and methods of the instance
+var shape = Shape(name: "Square")
+shape.numberOfSides = 7
+var shapeDescription = shape.simpleDescription()
+print(shapeDescription)
+
+// Use init to create an initializer to set up the class when an instance is created
+// Every property needs a value assigned - either in its declaration (as with numberOfSides) or in the initializer (as with name)
+// Use deinit to create a deinitializer if you need to perform some cleanup before the object is deallocated
+
+// Subclasses include their superclass name after their class name, separated by a colon
+// Methods on a subclass that override the superclass's implementation are marked with override
+class Square: Shape {
+    var sideLength: Double
+
+    init(sideLength: Double, name: String) {
+        self.sideLength = sideLength
+        super.init(name: name)
+        numberOfSides = 4
+    }
+    
+    func area() -> Double {
+        return sideLength * sideLength
+    }
+    
+    override func simpleDescription() -> String {
+        return "A square with sides of length \(sideLength)"
+    }
+}
+
+let test = Square(sideLength: 5.2, name: "my test square")
+test.area()
+test.simpleDescription()
+
+// Experiment: Make another subclass named Circle that takes a radius and a name as arguments to its initializer
+class Circle: Shape {
+    var radius: Double
+    
+    init(radius: Double, name: String) {
+        self.radius = radius
+        super.init(name: name)
+    }
+    
+    func area() -> Double {
+        return exp2(radius) * 3.14
+    }
+    
+    override func simpleDescription() -> String {
+        return "A circle with radius \(radius)"
+    }
+}
+
+let testCircle = Circle(radius:4, name:"my test circle")
+testCircle.area()
+testCircle.simpleDescription()
+
+// In addition to simple properties that are stored, properties can have a getter and a setter
