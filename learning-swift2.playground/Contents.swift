@@ -421,3 +421,137 @@ print(triangleAndSquare.triangle.sideLength)
 
 let optionalSquare: Square? = Square(sideLength: 2.5, name: "optional square")
 let sideLength = optionalSquare?.sideLength
+
+// Enumerations and Structures
+// Use enum to create an enumeration.
+// Enumerations can have associated methods with them
+
+/**
+    The raw value-type of the enumeration is Int, so you only have to specify the first raw value. The rest of the raw values are assigned in order. You can also use strings or floating-point numbers as the raw type of an enumeration
+*/
+enum Rank: Int {
+    case Ace = 1
+    case Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten
+    case Jack, Queen, King
+    
+    func simpleDescription() -> String {
+        switch self {
+            case .Ace:
+                return "ace"
+            case .Jack:
+                return "jack"
+            case .Queen:
+                return "queen"
+            case .King:
+                return "king"
+            default:
+                // Use the rawValue property to access the raw value of an enumeration member
+                return String(self.rawValue)
+            
+        }
+    }
+}
+
+let ace = Rank.Ace
+let aceRawValue = ace.rawValue
+
+// Experiment: Write a function that compares two Rank values by comparing their raw values
+
+func compareRanks(rank1: Rank, rank2: Rank) -> Bool {
+    return rank1.rawValue > rank2.rawValue
+}
+
+// Use the init?(rawValue:) initializer to make an instance of an enumeration from a raw value
+if let convertedRank = Rank(rawValue: 3) {
+    let threeDescription = convertedRank.simpleDescription()
+}
+
+enum Suit {
+    case Spades, Hearts, Diamonds, Clubs
+    
+    func simpleDescription() -> String {
+        switch self {
+            case .Spades:
+                return "spades"
+            case .Hearts:
+                return "hearts"
+            case .Diamonds:
+                return "diamonds"
+            case .Clubs:
+                return "clubs"
+        }
+    }
+    
+    func color() -> String {
+        switch self {
+            case .Spades, .Clubs:
+                return "black"
+        
+            case .Diamonds, .Hearts:
+                return "red"
+        }
+    }
+}
+
+let hearts = Suit.Hearts
+let heartsDescription = hearts.simpleDescription()
+
+// Experiment: Add a color() method to Suit that returns "black" for spades and clubs and "red" for diamonds and hearts
+
+let heartsColor = hearts.color()
+
+// Use struct to create a structure. Structures support many of the same behaviors as classes, including methods and initializers. One of the most important differences between structures and classes is that structures are always copied when they are passed around in your code, but classes are passed by reference
+
+struct Card {
+    var rank: Rank
+    var suit: Suit
+    
+    func simpleDescription() -> String {
+        return "The \(rank.simpleDescription()) of \(suit.simpleDescription())"
+    }
+}
+
+let threeOfSpades = Card(rank: Rank.Three, suit: Suit.Spades)
+let threeOfSpadesDescription = threeOfSpades.simpleDescription()
+
+// Experiment: Add a method to Card that creates a full deck of cards, with one card of each combination of rank and suit
+// Better to do it as a separate function
+func createFullDeckOfCards() -> [Card] {
+    let suits = [Suit.Spades, Suit.Hearts, Suit.Diamonds, Suit.Clubs]
+    let ranks = [Rank.Ace, Rank.Two, Rank.Three, Rank.Four, Rank.Five, Rank.Six, Rank.Seven, Rank.Eight, Rank.Nine, Rank.Ten, Rank.Jack, Rank.Queen, Rank.King]
+    var deck = [Card]()
+    for r in ranks {
+        for s in suits {
+            deck.append(Card(rank: r, suit: s))
+        }
+    }
+    return deck
+}
+
+let deckOfCards = createFullDeckOfCards()
+for card in deckOfCards {
+    print(card)
+}
+
+// An instance of an enumeration can have values associated with the instance. Instances of the same enumeration member can can have different values associated with them
+enum ServerResponse {
+    case Result(String, String)
+    case Error(String)
+    case Status(String)
+}
+
+let success = ServerResponse.Result("6:00 am", "8:09 pm")
+let failure = ServerResponse.Error("Out of cheese")
+let status = ServerResponse.Status("Hungry")
+
+switch success {
+    // Notice how the sunrise and sunset are extracted from the ServerResponse value as part of matching the value against the switch cases
+    case let .Result(sunrise, sunset):
+        let serverResponse = "Sunrise is at \(sunrise) and sunset is at \(sunset)"
+    case let .Error(error):
+        let serverResponse = "Failure... \(error)"
+    case let .Status(status):
+        let serverResponse = "Server status: \(status)"
+}
+
+// Experiment: Add a third case to ServerResponse and to the switch
