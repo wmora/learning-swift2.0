@@ -555,3 +555,70 @@ switch success {
 }
 
 // Experiment: Add a third case to ServerResponse and to the switch
+
+// Use protocol to declare a protocol
+protocol ExampleProtocol {
+    var simpleDescription: String {get}
+    
+    mutating func adjust()
+}
+
+// Classes, enumerations, and structs can all adopt protocols
+class SimpleClass: ExampleProtocol {
+    var simpleDescription: String = "A very simple class"
+    var anotherProperty: Int = 69105
+    
+    // The declaration of SimpleClass does not need any of its methods marked as mutating because methods on a class can always modify the class
+    func adjust() {
+        simpleDescription += " Now 100% adjusted"
+    }
+}
+
+var a = SimpleClass()
+a.adjust()
+
+let aDescription = a.simpleDescription
+
+struct SimpleStructure: ExampleProtocol {
+    var simpleDescription: String = "A simple structure"
+    mutating func adjust() {
+        simpleDescription += " (adjusted)"
+    }
+}
+
+var b = SimpleStructure()
+b.adjust()
+
+let bDescription = b.simpleDescription
+
+// Experiment: Write an enumeration that conforms to this protocol
+enum SimpleEnumeration: ExampleProtocol {
+
+    case Base, Adjusted
+    
+    var simpleDescription: String {
+        get {
+            return self.getDescription()
+        }
+    }
+    
+    func getDescription() -> String {
+        switch self {
+        case Base:
+            return "A simple description"
+        case .Adjusted:
+            return "An adjusted enum"
+        }
+    }
+    
+    mutating func adjust() {
+        self = SimpleEnumeration.Adjusted
+    }
+}
+
+var c = SimpleEnumeration.Base
+c.adjust()
+
+let cDescription = c.simpleDescription
+
+// Use extension to add functionality to an existing type, such as new methods and computed properties
