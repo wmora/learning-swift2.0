@@ -622,3 +622,87 @@ c.adjust()
 let cDescription = c.simpleDescription
 
 // Use extension to add functionality to an existing type, such as new methods and computed properties
+extension Int: ExampleProtocol {
+    var simpleDescription: String {
+        return "The number \(self)"
+    }
+    
+    mutating func adjust() {
+        self += 42
+    }
+    
+}
+
+print(7.simpleDescription)
+
+// Experiment: Write an extension for the Double type that adds an absoluteValue property
+extension Double {
+    
+    var absoluteValue: Double {
+        return self < 0 ? self * -1.0: self
+    }
+    
+}
+
+print((-9.0).absoluteValue)
+
+let protocolValue: ExampleProtocol = a
+print(protocolValue.simpleDescription)
+
+// Generics
+// Write a name inside angle brackets to make a generic function or type
+func repeatItem<Item>(item: Item, numberOfTimes: Int) -> [Item] {
+    var result = [Item]()
+    for _ in 0..<numberOfTimes {
+        result.append(item)
+    }
+    return result
+}
+
+repeatItem("knock", numberOfTimes: 4)
+
+// You can make generic forms of functions and methods, as well a classes, enumerations, and structures
+
+// Reimplement the Swift standard library's optional type
+enum OptionalType<T> {
+    case None
+    case Some(T)
+}
+
+var possibleInteger: OptionalType<Int> = .None
+possibleInteger = .Some(100)
+
+// Use where after the type name to specify a list of requirements - for example, to require the type to implement a protocol, to require two types to be the same, or to require a class to have a particular superclass
+func anyCommonElements <T, U where T: SequenceType, U: SequenceType, T.Generator.Element: Equatable, T.Generator.Element == U.Generator.Element> (lhs: T, _ rhs: U) -> Bool {
+    for lhsItem in lhs {
+        for rhsItem in rhs {
+            if lhsItem == rhsItem {
+                return true
+            }
+        }
+    }
+    
+    return false
+}
+
+anyCommonElements([1, 2, 3], [3])
+
+// In the simple cases, you can omit where and simply write the protocol or class name after a colon. Writing <T: Equatable> is the same as writing <T where T: Equatable>
+
+// Experiment: Modify the anyCommonElements(_:_:) function to make a function that returns an array of elements that any two sequences have in common
+func allCommonElements <T, U where T: SequenceType, U: SequenceType, T.Generator.Element: Equatable, T.Generator.Element == U.Generator.Element> (lhs: T, _ rhs: U) -> Array<T.Generator.Element> {
+
+    var result = Array<T.Generator.Element>()
+    
+    for lhsItem in lhs {
+        for rhsItem in rhs {
+            if lhsItem == rhsItem {
+                result.append(lhsItem)
+            }
+        }
+    }
+    
+    return result
+}
+
+allCommonElements([1,2,3,4], [1, 4, 5])
